@@ -346,7 +346,7 @@ sub st_shell_reconf_mgmt{
 		$sth->execute() or die "ERROR ----> st_shell_reconf_mgmt ----> Error while executing the DB query with message : " . $sth->errstr() . "\n";
 		my $l_serverid_ref = $sth->fetchrow_hashref() or die "ERROR ----> st_shell_reconf_mgmt ----> Error while fetching the data from DB with message : " . $sth->errstr() . "\n";
 		print "WARNING ----> (st_shell_reconf_mgmt) ----> The device is handled by a distributed server or remote collector.\n",
-			"\t\t\t Please run the command 'st reconf $l_mgmt_id' on the server : $l_serverid_ref->{display_name} with IP $l_serverid_ref->{ip}.\õ";
+			"\t\t\t Please run the command 'st reconf $l_mgmt_id' on the server : $l_serverid_ref->{display_name} with IP $l_serverid_ref->{ip}.\Ãµ";
 	}
 }
 
@@ -492,7 +492,7 @@ sub st_db_get_userid{
 
 	my $st_user = shift;
 	my $result = "";
-	my $db_user = "postgres";
+	my $db_user = "Postgres";
 	my $db_host = "localhost";
 	my $db_name = "securetrack";
 	my $dbh = DBI->connect("dbi:Pg:dbname=$db_name", "$db_user","");
