@@ -401,7 +401,7 @@ sub st_api_get_rule_uuid {
 		if ($l_device_vendor eq "Checkpoint") {
 			#code
 			if ($l_fw_rule->{binding}->{policy}->{name} eq $l_policy) {
-				if ($l_fw_rule->{order} eq $l_rule_num) {
+				if ($l_fw_rule->{rule_number} eq $l_rule_num) {
 					$l_rule_uid = $l_fw_rule->{uid};
 					$l_found_rule = 1;
 				}
@@ -425,7 +425,7 @@ sub st_api_get_rule_uuid {
 			}
 			if (($l_fw_rule->{binding}->{from_zone}->{name} eq $l_from_zone) and
 			    $l_fw_rule->{binding}->{to_zone}->{name} eq $l_to_zone) {
-				if ($l_fw_rule->{order} eq $l_rule_num) {
+				if ($l_fw_rule->{rule_number} eq $l_rule_num) {
 					$l_rule_uid = $l_fw_rule->{uid};
 					$l_found_rule = 1;
 				}
@@ -440,7 +440,7 @@ sub st_api_get_rule_uuid {
 			elsif($l_acl_name =~ m/\wlobal/) {
 				#We have the Global ACL
 				if ($l_fw_rule->{binding}->{acl}->{global} eq "true"){
-					if ($l_fw_rule->{order} eq $l_rule_num) {
+					if ($l_fw_rule->{rule_number} eq $l_rule_num) {
 						$l_rule_uid = $l_fw_rule->{uid};
 						$l_found_rule = 1;
 					}
@@ -453,7 +453,7 @@ sub st_api_get_rule_uuid {
 				}
 				else{
 					if ($l_fw_rule->{binding}->{acl}->{interface}->{acl_name} eq $l_acl_name){
-						if ($l_fw_rule->{order} eq $l_rule_num) {
+						if ($l_fw_rule->{rule_number} eq $l_rule_num) {
 							$l_rule_uid = $l_fw_rule->{uid};
 							$l_found_rule = 1;
 						}
