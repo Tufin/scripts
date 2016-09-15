@@ -7,7 +7,7 @@ These scripts are provided as sample code for the functionality without any warr
 
 Installation Instructions
 -------------------------
-The pre-required libraries are available at : https://github.com/Tufin/scripts/libraries
+The pre-required libraries are available at : https://github.com/Tufin/scripts/tree/master/libraries
 Each script is provided with its installation instruction.
 
 
