@@ -35,6 +35,8 @@ $Data::Dumper::Indent = 1;
 #
 # - Version 1.0    : Initial creation of the script
 # - Version 1.1    : Added support to search rules by ID instead of Order for Fortinet
+# - Version 1.2    : Added a cache mechanism for the rules to prevent multiple API calls.
+# - Version 1.3    : Added support for Rule Number for Fortinet / Netscreen
 #
 #
 #############################
@@ -44,7 +46,6 @@ $Data::Dumper::Indent = 1;
 # - Add support for StoneSoft devices
 # - Add support for Palo Alto devices
 # - Add additional debugging and reporting.
-# - Add Rule cache mechanism to avoid multiple API requests for the same rule base.
 #
 ##################################
 
@@ -52,7 +53,7 @@ $Data::Dumper::Indent = 1;
 use vars qw ($debug $help $testing $userid $device_name $policy_package $rules_list $acl_name $from_zone $to_zone $analysis_duration $rule_type);
 
 my $prog_date    	= "4 November 2016";
-my $prog_version        = "1.1";
+my $prog_version        = "1.3";
 my $start_run = time(); # We want to know how much time it took for the script to run (just for fun)
 
 #Retrieving additional parameters.
@@ -105,12 +106,10 @@ if (not defined ($rule_type)){
 }
 else{
         $rule_type = lc($rule_type);
-        if($rule_type ne "id"){
-                if ($rule_type ne "order"){
-                        print "ERROR ----> Invalid rule_type provided.\n";
-                        print_usage();
-                        exit;
-                }
+        if($rule_type ne "id" and $rule_type ne "number" and $rule_type ne "order" and $rule_type ne "number"){
+                print "ERROR ----> Invalid rule_type provided.\n";
+                print_usage();
+                exit;
         }
 }
 
@@ -449,6 +448,12 @@ sub st_api_get_rule_uuid {
                                     $l_found_rule = 1;
                                 }
                         }
+                        elsif ($rule_type eq "number"){
+                                if ($l_fw_rule ->{rule_number} eq $l_rule_num) {
+                                    $l_rule_uid = $l_fw_rule->{uid};
+                                    $l_found_rule = 1;
+                                }
+                        }
                         else{
                                 if (($l_fw_rule->{binding}->{from_zone}->{name} eq $l_from_zone) and
                                     $l_fw_rule->{binding}->{to_zone}->{name} eq $l_to_zone) {
@@ -466,6 +471,12 @@ sub st_api_get_rule_uuid {
                                     $l_found_rule = 1;
                                 }
 
+                        }
+                        elsif ($rule_type eq "number"){
+                                if ($l_fw_rule ->{rule_number} eq $l_rule_num) {
+                                    $l_rule_uid = $l_fw_rule->{uid};
+                                    $l_found_rule = 1;
+                                }
                         }
                         else{
                                 if ($l_from_zone eq "global") {
@@ -600,7 +611,7 @@ sub print_usage {
         "\n Version \t: ".$prog_version . "\n\r",
 	"\n Usage : apg_batch_run.pl -device-name <management name> [-policy-package <Name of the policy package>]\n",
 	"\t\t\t-rule-list <list of rules number>\n",
-	"\t\t\t[-rule-type <The type of rule to search : Id or Order>]\n",
+	"\t\t\t[-rule-type <The type of rule to search : Id, Number, Order>]\n",
 	"\t\t\t-duration <number of days for analysis>\n",
 	"\t\t\t[-debug ] [-help]\n",
 	"Parameters details:\n",
